@@ -1,0 +1,32 @@
+
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    container_name: mes_postgres
+    restart: always
+    environment:
+      POSTGRES_USER: mes_user
+      POSTGRES_PASSWORD: mes_pass
+      POSTGRES_DB: mes_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: mes_ui
+    ports:
+      - "8501:8501"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: mes_db
+      DB_USER: mes_user
+      DB_PASSWORD: mes_pass
+
+volumes:
+  postgres_data:
